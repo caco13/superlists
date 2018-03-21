@@ -33,7 +33,8 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox(
-            firefox_binary='/home/caco/Downloads/firefox/firefox')
+            firefox_binary='/home/caco/Downloads/firefox/firefox'
+        )
         staging_server = os.environ.get('STAGING_SERVER')
         if staging_server:
             self.live_server_url = 'http://' + staging_server
@@ -46,8 +47,9 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def add_list_item(self, item_text):
         num_rows = \
-            len(self.browser.find_elements_by_css_selector('#id_list_table '
-                                                           'tr'))
+            len(self.browser.find_elements_by_css_selector(
+                '#id_list_table tr'
+            ))
         self.get_item_input_box().send_keys(item_text)
         self.get_item_input_box().send_keys(Keys.ENTER)
         item_number = num_rows + 1

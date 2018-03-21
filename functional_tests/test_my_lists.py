@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 
 from functional_tests.base import FunctionalTest
+from functional_tests.my_lists_page import MyListsPage
+
 User = get_user_model()
 
 
@@ -17,7 +19,8 @@ class MyListTest(FunctionalTest):
         first_list_url = self.browser.current_url
 
         # She notices a "My lists" link, for the first time
-        self.browser.find_element_by_link_text('My lists').click()
+        # She goes to My lists page
+        MyListsPage(self).go_to_my_lists_page()
 
         # She sees that her list is in there, named according to its
         # first list item
