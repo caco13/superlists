@@ -11,3 +11,9 @@
         {% endfor %}
     </table>
 {% endblock %}
+
+{% block extra_content %}
+    <form action="lists/{{ list.id }}/share">
+        <input type="email" name="sharee" placeholder="your-friend@example.com">
+    </form>
+{% endblock %}
