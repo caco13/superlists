@@ -5,6 +5,9 @@
 {% block form_action %}{% url 'view_list' list.id %} {% endblock %}
 
 {% block table %}
+    {% if list.owner.email != request.user.email %}
+        <h2 id="id_list_owner">{{ list.owner.email }}' list</h2>
+    {% endif %}
     <table id="id_list_table" class="table">
         {% for item in list.item_set.all %}
             <tr><td>{{ forloop.counter }}: {{ item.text }}</td></tr>
@@ -13,7 +16,21 @@
 {% endblock %}
 
 {% block extra_content %}
-    <form action="lists/{{ list.id }}/share">
-        <input type="email" name="sharee" placeholder="your-friend@example.com">
-    </form>
+    <div class="pull-left">
+        {% if list.shared_with.all %}
+            <h2>List shared with:</h2>
+        {% endif %}
+        <ul>
+            {% for sharee in list.shared_with.all %}
+                <li class="list-sharee">{{ sharee.email }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="pull-right">
+        <h2>Share this list</h2>
+        <form action="{% url 'share_list' list.id %}" method="post">
+            {% csrf_token %}
+            <input type="email" name="sharee" placeholder="your-friend@example.com">
+        </form>
+    </div>
 {% endblock %}

@@ -154,6 +154,19 @@ class MyListsTest(TestCase):
         response = self.client.get('/lists/users/a@b.com/')
         self.assertEqual(response.context['owner'], correct_user)
 
+    def test_passes_lists_shared_with_owner_to_template(self):
+        user = User.objects.create(email='a@b.com')
+        sharee_user = User.objects.create(email='c@d.com')
+        list_ = List.objects.create(owner=sharee_user)
+        Item.objects.create(text='lula lá', list=list_)
+        list_.shared_with.add(user)
+        shared_lists = List.objects.filter(shared_with=user)
+        response = self.client.get('/lists/users/a@b.com/')
+        self.assertEqual(
+            response.context['shared_lists'].first().name,
+            shared_lists.first().name
+        )
+
 
 @patch('lists.views.NewListForm')
 class NewListViewUnitTest(unittest.TestCase):

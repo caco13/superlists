@@ -32,9 +32,10 @@ def wait(fn):
 class FunctionalTest(StaticLiveServerTestCase):
 
     def setUp(self):
-        self.browser = webdriver.Firefox(
-            firefox_binary='/home/caco/Downloads/firefox/firefox'
-        )
+        # self.browser = webdriver.Firefox(
+        #     firefox_binary='/home/caco/Downloads/firefox/firefox'
+        # )
+        self.browser = webdriver.Firefox()
         staging_server = os.environ.get('STAGING_SERVER')
         if staging_server:
             self.live_server_url = 'http://' + staging_server

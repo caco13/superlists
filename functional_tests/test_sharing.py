@@ -19,9 +19,10 @@ class SharingTest(FunctionalTest):
         self.addCleanup(lambda: quit_if_possible(edith_browser))
 
         # Her friend Oniciferous is also hanging out on the lists site
-        oni_browser = webdriver.Firefox(
-            firefox_binary='/home/caco/Downloads/firefox/firefox'
-        )
+        # oni_browser = webdriver.Firefox(
+        #     firefox_binary='/home/caco/Downloads/firefox/firefox'
+        # )
+        oni_browser = webdriver.Firefox()
         self.addCleanup(lambda: quit_if_possible(oni_browser))
         self.browser = oni_browser
         self.create_pre_authenticated_session('oniciferous@example.com')
@@ -31,7 +32,12 @@ class SharingTest(FunctionalTest):
         self.browser.get(self.live_server_url)
         list_page = ListPage(self).add_list_item('Get help')
 
-        # She notices a "Share this list" option
+        # She notices a "Share this list" option with a box to enter an
+        # email to share her list
+        self.assertEqual(
+            'Share this list',
+            edith_browser.find_element_by_tag_name('h2').text
+        )
         share_box = list_page.get_share_box()
         self.assertEqual(
             share_box.get_attribute('placeholder'),
@@ -42,7 +48,7 @@ class SharingTest(FunctionalTest):
         # The page updates to say that it's shared with Oniciferous:
         list_page.share_list_with('oniciferous@example.com')
 
-        # Oniciferous now goes to the lists page with his browser
+        # Oniciferous now goes to his lists page with his browser
         self.browser = oni_browser
         MyListsPage(self).go_to_my_lists_page()
 
@@ -51,7 +57,7 @@ class SharingTest(FunctionalTest):
 
         # On the list page, Oniciferous can see says that it's Edith's list
         self.wait_for(lambda: self.assertEqual(
-            list_page.get_list_owner(), 'edith@example.com'
+            list_page.get_list_owner(), 'edith@example.com\' list'
         ))
 
         # He adds an item to the list
